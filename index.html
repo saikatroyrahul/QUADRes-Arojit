@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>My Brand - Mobile Music Player</title>
-    <!-- Font Awesome CDN -->
+    <!-- Font Awesome for social media icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* Mobile-First Design - Reset and Base */
@@ -241,7 +241,7 @@
             width: 0%;
             position: relative;
             border-radius: 1px;
-            background: #ffa200; /* Single solid color */
+            background: #ffa200;
             background-size: 300% 100%;
             animation: wave-flow 3s linear infinite;
             overflow: hidden;
@@ -338,91 +338,153 @@
             min-width: 64px;
             min-height: 64px;
             font-size: 28px;
-            background: rgba(208, 188, 255, 0.12); /* Transparent when paused */
+            background: rgba(208, 188, 255, 0.12);
             border: 1px solid rgba(208, 188, 255, 0.2);
             color: white;
             border-radius: 32px;
             transition: all 0.2s ease;
         }
 
-        /* Add this new class for playing state */
         .play-btn.playing {
-            background: linear-gradient(135deg, #ffa200, #ff7b00); /* Orange when playing */
+            background: linear-gradient(135deg, #ffa200, #ff7b00);
             border: none;
             box-shadow: 0 3px 12px rgba(255, 162, 0, 0.3);
         }
 
-        /* Volume control */
-        .volume-container {
+        /* Social Media Slider */
+        .social-container {
             display: flex;
             align-items: center;
-            gap: 12px;
+            justify-content: center;
             margin-top: 20px;
-            justify-content: center;
         }
 
-        .volume-icon {
-            font-size: 20px;
-            min-width: 24px;
-            color: #CAC4D0;
+        .social-slider {
+            width: 140px;
+            height: 8px;
+            background: linear-gradient(to right, #E4405F 0%, rgba(204, 194, 220, 0.16) 40%, rgba(204, 194, 220, 0.16) 60%, #1877F2 100%);
+            outline: none;
+            border-radius: 10px;
+            -webkit-appearance: none;
+            appearance: none;
+            cursor: pointer;
+            position: relative;
+            margin: 0 20px;
+        }
+
+        /* Hide default slider thumb - we use walking icon instead */
+        .social-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 0;
+            height: 0;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        .social-slider::-moz-range-thumb {
+            width: 0;
+            height: 0;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            opacity: 0;
+        }
+
+        /* Walking person icon overlay */
+        .slider-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .walking-icon {
+            position: absolute;
+            top: 6px;
+            left: 0;
+            transform: translateY(-50%);
+            pointer-events: none;
+            z-index: 10;
+            color: #333;
+            font-size: 27px;
+            transition: all 0.3s ease;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        .walking-icon.flipped {
+            transform: translateY(-50%) scaleX(-1);
+        }
+
+        .social-logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 180px;
+            margin-left: 26px;
+        }
+
+        .social-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        /* Custom volume slider container */
-        .volume-slider-container {
-            width: 140px;
-            height: 6px;
-            background: rgba(220, 196, 194, 0.16);
-            border-radius: 3px;
-            position: relative;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
             cursor: pointer;
-            overflow: hidden;
+            flex-shrink: 0;
         }
 
-        /* Volume progress fill */
-        .volume-progress {
-            height: 100%;
-            background: linear-gradient(135deg, #fdc29f, #ff744d);
-            border-radius: 3px;
-            width: 70%; /* Initial volume at 70% */
-            transition: width 0.2s ease;
-            position: relative;
+        .social-logo.active {
+            opacity: 1;
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
         }
 
-        /* Hide the default slider */
-        .volume-slider {
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
+        .instagram-logo {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        }
+
+        .facebook-logo {
+            background: #1877F2;
+        }
+
+        .social-logo i {
+            color: white;
+            font-size: 20px;
+        }
+
+        /* Visitor Counter */
+        .visitor-counter {
             position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 2;
-            -webkit-appearance: none;
-            appearance: none;
+            top: 20px;
+            right: 20px;
+            background: rgba(230, 224, 233, 0.12);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 8px 16px;
+            border: 1px solid rgba(208, 188, 255, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 3;
         }
 
-        /* Remove all slider thumb styles */
-        .volume-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 0;
-            height: 0;
-            background: transparent;
-            border: none;
-            cursor: pointer;
+        .visitor-text {
+            font-size: 12px;
+            color: #CAC4D0;
+            margin-bottom: 2px;
+            text-align: center;
+            font-weight: 500;
         }
 
-        .volume-slider::-moz-range-thumb {
-            width: 0;
-            height: 0;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            opacity: 0;
+        .visitor-number {
+            font-size: 16px;
+            color: #D0BCFF;
+            font-weight: bold;
+            text-align: center;
+            font-family: 'Roboto Mono', monospace;
         }
 
         /* Loading animation */
@@ -449,6 +511,31 @@
             100% {
                 transform: translateY(-50%) scale(4);
                 opacity: 0;
+            }
+        }
+
+        .visitor-counter {
+            transition: all 0.3s ease;
+        }
+
+        .visitor-number {
+            transition: transform 0.2s ease;
+        }
+
+        /* Mobile responsive for visitor counter */
+        @media (max-width: 400px) {
+            .visitor-counter {
+                top: 16px;
+                right: 16px;
+                padding: 6px 12px;
+            }
+            
+            .visitor-text {
+                font-size: 10px;
+            }
+            
+            .visitor-number {
+                font-size: 14px;
             }
         }
 
@@ -503,8 +590,13 @@
                 border-radius: 10px;
             }
             
-            .volume-slider-container {
-                width: 120px;
+            .social-logos {
+                width: 160px;
+                margin-left: 22px;
+            }
+
+            .walking-icon {
+                font-size: 14px;
             }
         }
 
@@ -539,8 +631,13 @@
                 font-size: 13px;
             }
             
-            .volume-slider-container {
-                width: 100px;
+            .social-logos {
+                gap: 14px;
+                margin: 0 auto;
+            }
+
+            .swimming-icon {
+                font-size: 18px;
             }
         }
 
@@ -568,13 +665,24 @@
                 border-radius: 14px;
             }
             
-            .volume-slider-container {
+            .social-slider {
                 height: 8px;
+            }
+            
+            .social-slider::-webkit-slider-thumb {
+                width: 32px;
+                height: 32px;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Visitor Counter -->
+    <div class="visitor-counter">
+        <div class="visitor-text">Visitors</div>
+        <div class="visitor-number" id="visitorCount">0</div>
+    </div>
+
     <!-- Animated background particles -->
     <div class="particles-container" id="particles"></div>
 
@@ -620,21 +728,28 @@
                     <i class="fa-solid fa-backward"></i>
                 </button>
                 <button onclick="togglePlay()" id="playBtn" class="play-btn">
-                    <i class="fa-solid fa-circle-play"></i>
+                    <i class="fa-solid fa-circle-play" id="playIcon"></i>
                 </button>
                 <button onclick="skipForward()" title="Skip forward 10 seconds">
                     <i class="fa-solid fa-forward"></i>
                 </button>
             </div>
 
-            <!-- VOLUME CONTROL SECTION -->
-            <div class="volume-container">
-                <span class="volume-icon" id="volumeIcon">
-                    <i class="fa-solid fa-volume-high"></i>
-                </span>
-                <div class="volume-slider-container" onclick="setVolume(event)">
-                    <div class="volume-progress" id="volumeProgress"></div>
-                    <input type="range" min="0" max="100" value="70" class="volume-slider" id="volumeSlider">
+            <!-- SOCIAL MEDIA SLIDER SECTION -->
+            <div class="social-container">
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div class="social-logos">
+                        <div class="social-logo instagram-logo" id="instaLogo">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="slider-wrapper">
+                            <input type="range" min="0" max="100" value="50" class="social-slider" id="socialSlider">
+                            <i class="fa-solid fa-person-swimming walking-icon" id="walkingIcon" style="color: #ffffff;"></i>
+                        </div>
+                        <div class="social-logo facebook-logo" id="fbLogo">
+                            <i class="fab fa-facebook-f"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -643,74 +758,76 @@
     <script>
         const audio = document.getElementById('audioPlayer');
         const playBtn = document.getElementById('playBtn');
+        const playIcon = document.getElementById('playIcon');
         const progress = document.getElementById('progress');
         const currentTimeEl = document.getElementById('currentTime');
         const durationEl = document.getElementById('duration');
-        const volumeSlider = document.getElementById('volumeSlider');
-        const volumeProgress = document.getElementById('volumeProgress');
+        const socialSlider = document.getElementById('socialSlider');
+        const instaLogo = document.getElementById('instaLogo');
+        const fbLogo = document.getElementById('fbLogo');
+        const visitorCountEl = document.getElementById('visitorCount');
+        const walkingIcon = document.getElementById('walkingIcon');
 
-        // Initialize volume
+        // Initialize volume (keeping audio functionality)
         audio.volume = 0.7;
 
-        // Update volume icon based on volume level
-        function updateVolumeIcon(volumeLevel) {
-            const volumeIcon = document.getElementById('volumeIcon');
+        // COMPLETELY FIXED: Swimming icon positioning with separate track
+        function updateWalkingIcon() {
+            const value = parseInt(socialSlider.value);
+            const trackWidth = 140; // Same as slider width
             
-            if (volumeLevel === 0) {
-                volumeIcon.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
-            } else if (volumeLevel <= 30) {
-                volumeIcon.innerHTML = '<i class="fa-solid fa-volume-low"></i>';
+            // Calculate position as percentage along the track
+            const positionPercent = value; // 0% to 100%
+            
+            // Set position using percentage to avoid pixel calculation issues
+            walkingIcon.style.left = positionPercent + '%';
+            
+            // Update orientation based on direction
+            if (value <= 50) {
+                // Going toward Instagram (left) - normal orientation  
+                walkingIcon.style.transform = 'translateY(-50%) translateX(-50%) scaleX(1)';
             } else {
-                volumeIcon.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+                // Going toward Facebook (right) - flip horizontally
+                walkingIcon.style.transform = 'translateY(-50%) translateX(-50%) scaleX(-1)';
             }
         }
 
-        // Update volume progress bar
-        function updateVolumeProgress(volumeLevel) {
-            volumeProgress.style.width = volumeLevel + '%';
-        }
-
-        // Initialize volume icon and progress on page load
-        updateVolumeIcon(70);
-        updateVolumeProgress(70);
-
-        // Set volume from click position
-        function setVolume(e) {
-            const container = e.currentTarget;
-            const rect = container.getBoundingClientRect();
-            const clickX = e.clientX || (e.touches && e.touches[0].clientX);
+        // Visitor Counter Function
+        function updateVisitorCount() {
+            // Get current visitor count from memory (since we can't use localStorage in Claude.ai)
+            let visitorCount = window.visitorCount || 0;
             
-            if (clickX) {
-                const clickPosition = clickX - rect.left;
-                const percentage = Math.max(0, Math.min(100, (clickPosition / rect.width) * 100));
-                
-                // Update audio volume
-                audio.volume = percentage / 100;
-                
-                // Update slider value
-                volumeSlider.value = percentage;
-                
-                // Update visual progress
-                updateVolumeProgress(percentage);
-                
-                // Update icon
-                updateVolumeIcon(percentage);
-            }
+            // Increment visitor count
+            visitorCount++;
+            
+            // Store in memory for this session
+            window.visitorCount = visitorCount;
+            
+            // Update display with animation
+            visitorCountEl.textContent = visitorCount;
+            
+            // Add a small animation effect
+            visitorCountEl.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                visitorCountEl.style.transform = 'scale(1)';
+            }, 200);
+            
+            return visitorCount;
         }
 
         // FIXED: Single togglePlay function with proper class handling
         function togglePlay() {
             if (audio.paused) {
                 audio.play().then(() => {
-                    playBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+                    playIcon.className = 'fa-solid fa-pause';
                     playBtn.classList.add('playing'); // Add playing class for orange background
                 }).catch(e => {
                     console.log('Playback failed:', e);
-                    playBtn.innerHTML = '<i class="fa-solid fa-times-circle"></i>';
+                    playIcon.className = 'fa-solid fa-times';
                 });
             } else {
                 audio.pause();
-                playBtn.innerHTML = '<i class="fa-solid fa-circle-play"></i>';
+                playIcon.className = 'fa-solid fa-circle-play';
                 playBtn.classList.remove('playing'); // Remove playing class for transparent background
             }
         }
@@ -790,9 +907,6 @@
 
         // Touch support for progress bar
         document.querySelector('.wave-progress-bar').addEventListener('touchstart', setProgress);
-        
-        // Touch support for volume control
-        document.querySelector('.volume-slider-container').addEventListener('touchstart', setVolume);
 
         // Update progress with wave animation
         audio.addEventListener('timeupdate', () => {
@@ -815,33 +929,79 @@
             durationEl.textContent = formatTime(audio.duration);
         });
 
-        // Volume control with Material feedback
-        volumeSlider.addEventListener('input', (e) => {
-            const volumeValue = parseInt(e.target.value);
-            audio.volume = volumeValue / 100;
-            updateVolumeIcon(volumeValue);
-            updateVolumeProgress(volumeValue);
+        // Social Media Slider Control with walking icon
+        let isSliding = false;
+        let slideTimeout;
+
+        socialSlider.addEventListener('input', (e) => {
+            const value = parseInt(e.target.value);
+            
+            // Update walking icon position and orientation
+            updateWalkingIcon();
+            
+            // Clear any existing timeout
+            clearTimeout(slideTimeout);
+            
+            // Update visual feedback
+            if (value < 30) {
+                instaLogo.classList.add('active');
+                fbLogo.classList.remove('active');
+            } else if (value > 70) {
+                fbLogo.classList.add('active');
+                instaLogo.classList.remove('active');
+            } else {
+                instaLogo.classList.remove('active');
+                fbLogo.classList.remove('active');
+            }
+            
+            // Set a timeout to navigate and reset
+            slideTimeout = setTimeout(() => {
+                if (value < 30) {
+                    // Slide left - Go to Instagram
+                    window.open('https://www.instagram.com/quadres_bd', '_blank');
+                } else if (value > 70) {
+                    // Slide right - Go to Facebook
+                    window.open('https://www.facebook.com/quadres.bd', '_blank');
+                }
+                
+                // Reset slider to center after a short delay
+                setTimeout(() => {
+                    socialSlider.value = 50;
+                    updateWalkingIcon(); // Reset walking icon position
+                    instaLogo.classList.remove('active');
+                    fbLogo.classList.remove('active');
+                }, 500);
+            }, 300);
+        });
+
+        // Handle touch events for better mobile experience
+        socialSlider.addEventListener('touchstart', () => {
+            isSliding = true;
+        });
+
+        socialSlider.addEventListener('touchend', () => {
+            isSliding = false;
         });
 
         // Handle audio loading states
         audio.addEventListener('loadstart', () => {
-            playBtn.innerHTML = '<div class="loading"></div>';
+            playIcon.className = 'fa-solid fa-spinner fa-spin';
         });
 
         audio.addEventListener('canplay', () => {
-            if (playBtn.innerHTML.includes('loading')) {
-                playBtn.innerHTML = '<i class="fa-solid fa-circle-play"></i>';
+            if (playIcon.className.includes('spinner')) {
+                playIcon.className = 'fa-solid fa-circle-play';
             }
         });
 
         audio.addEventListener('error', (e) => {
-            playBtn.innerHTML = '<i class="fa-solid fa-times-circle"></i>';
+            playIcon.className = 'fa-solid fa-times';
             console.log('Audio error:', e);
         });
 
         // FIXED: Handle when audio ends - reset to paused state
         audio.addEventListener('ended', () => {
-            playBtn.innerHTML = '<i class="fa-solid fa-circle-play"></i>';
+            playIcon.className = 'fa-solid fa-circle-play';
             playBtn.classList.remove('playing'); // Remove orange background when song ends
         });
 
@@ -868,7 +1028,7 @@
         let lastTouchEnd = 0;
         document.addEventListener('touchend', function (event) {
             const now = (new Date()).getTime();
-            if (now - (lastTouchEnd || 0) <= 300) {
+            if (now - lastTouchEnd <= 300) {
                 event.preventDefault();
             }
             lastTouchEnd = now;
@@ -886,6 +1046,9 @@
                 
                 document.body.style.height = '100vh';
                 document.body.style.height = '100dvh';
+                
+                // Update walking icon position after orientation change
+                setTimeout(updateWalkingIcon, 100);
             }, 100);
         });
 
@@ -906,7 +1069,15 @@
         // Initialize everything
         window.addEventListener('load', () => {
             preloadBackgroundImage();
+            updateVisitorCount(); // Count this visit
+            updateWalkingIcon(); // Initialize walking icon position
         });
+
+        // Also update visitor count immediately
+        updateVisitorCount();
+
+        // Initialize walking icon position on page load
+        updateWalkingIcon();
 
         preloadBackgroundImage();
     </script>
