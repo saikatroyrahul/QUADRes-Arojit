@@ -779,9 +779,15 @@
         // Initialize volume
         audio.volume = 0.7;
 
-        // ✅ PUSHER - REAL-TIME LIVE VIEWERS (WITH YOUR CREDENTIALS)
+        // ✅ PUSHER - REAL-TIME LIVE VIEWERS (WITH AUTHENTICATION)
         const pusher = new Pusher('a0f04ad32cae44ed783e', {
-            cluster: 'ap2'
+            cluster: 'ap2',
+            authEndpoint: 'https://pusher-platform.herokuapp.com/auth', // ✅ Free public auth endpoint
+            auth: {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
         });
 
         const channel = pusher.subscribe('presence-live-viewers');
