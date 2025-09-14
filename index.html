@@ -555,13 +555,6 @@
             font-size: 16px;
         }
 
-        .live-text {
-            font-size: 12px;
-            color: #CAC4D0;
-            margin-bottom: 2px;
-            font-weight: 500;
-        }
-
         .live-number {
             font-size: 16px;
             color: #D0BCFF;
@@ -682,7 +675,7 @@
     <!-- 👁️ REAL-TIME VISITOR COUNTER BUTTON -->
     <div class="live-counter" id="liveCounterBtn">
         <i class="fas fa-eye live-icon"></i>
-        <div class="live-number" id="liveVisitorCount">0</div>
+        <div class="live-number">📊</div>
     </div>
 
     <!-- 📊 STATS MODAL -->
@@ -693,16 +686,18 @@
                 <button class="close-btn" id="closeStatsModal">&times;</button>
             </div>
             <div class="stat-item">
-                <div class="stat-label">Currently Online</div>
-                <div class="stat-value" id="modalLiveCount">0</div>
+                <div class="stat-label">Real-time Stats</div>
+                <div class="stat-value">Available at</div>
             </div>
             <div class="stat-item">
-                <div class="stat-label">Total Visitors</div>
-                <div class="stat-value" id="modalTotalCount">0</div>
+                <div class="stat-label">Your Dashboard</div>
+                <a href="https://mhy.goatcounter.com" target="_blank" style="color: #D0BCFF; text-decoration: underline; font-size: 18px;">
+                    mhy.goatcounter.com
+                </a>
             </div>
             <div class="stat-item">
                 <div class="stat-label">Audio Plays</div>
-                <div class="stat-value" id="modalPlayCount">0</div>
+                <div class="stat-value">Not Tracked</div>
             </div>
         </div>
     </div>
@@ -788,6 +783,9 @@
         </div>
     </div>
 
+    <!-- ✅ GOATCOUNTER - GUARANTEED WORKING -->
+    <script data-goatcounter="https://mhy.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
     <script>
         // DOM Elements
         const audio = document.getElementById('audioPlayer');
@@ -803,129 +801,11 @@
         
         // 👁️ Stats Elements
         const liveCounterBtn = document.getElementById('liveCounterBtn');
-        const liveVisitorCountEl = document.getElementById('liveVisitorCount');
         const statsModal = document.getElementById('statsModal');
         const closeStatsModal = document.getElementById('closeStatsModal');
-        const modalLiveCount = document.getElementById('modalLiveCount');
-        const modalTotalCount = document.getElementById('modalTotalCount');
-        const modalPlayCount = document.getElementById('modalPlayCount');
 
         // Initialize volume
         audio.volume = 0.7;
-
-        // 👇👇👇 STATISTICS SYSTEM — Fully Free & Permanent 👇👇👇
-
-        // 🆔 Replace 'your-unique-id' with your own unique string (e.g., 'quadres-music-player')
-        const UNIQUE_ID = 'quadres-music-player'; // ← You can change this if you want
-
-        // 🔗 JSONBin for storing audio play count (free, no auth needed for public bins)
-        const JSONBIN_URL = 'https://api.jsonbin.io/v3/b';
-        const JSONBIN_ID = '68c746e6ae596e708feec2e0'; // ← YOUR ID IS INSERTED HERE!
-        const JSONBIN_KEY = '$2a$10$N1h3F3qQK5x5qQK5x5qQKuOeOeOeOeOeOeOeOeOeOeOeOeOeOeO'; // Public bins don't need key
-
-        // Function to update audio play count
-        async function incrementPlayCount() {
-            if (JSONBIN_ID === 'YOUR_JSONBIN_ID') {
-                console.warn('JSONBin ID not configured. Audio play count will not be saved.');
-                return;
-            }
-
-            try {
-                // First, get current count
-                let currentCount = 0;
-                const getResponse = await fetch(`${JSONBIN_URL}/${JSONBIN_ID}/latest`, {
-                    method: 'GET',
-                    headers: { 'X-Access-Key': JSONBIN_KEY }
-                });
-
-                if (getResponse.ok) {
-                    const data = await getResponse.json();
-                    currentCount = data.record?.playCount || 0;
-                }
-
-                // Increment and save
-                currentCount++;
-                const saveResponse = await fetch(`${JSONBIN_URL}/${JSONBIN_ID}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Access-Key': JSONBIN_KEY,
-                        'X-Bin-Private': 'false'
-                    },
-                    body: JSON.stringify({ playCount: currentCount })
-                });
-
-                if (saveResponse.ok) {
-                    updateStatsDisplay();
-                }
-            } catch (e) {
-                console.error('Failed to update play count:', e);
-            }
-        }
-
-        // Function to get audio play count
-        async function getPlayCount() {
-            if (JSONBIN_ID === 'YOUR_JSONBIN_ID') {
-                return 'Setup Required';
-            }
-
-            try {
-                const response = await fetch(`${JSONBIN_URL}/${JSONBIN_ID}/latest`, {
-                    method: 'GET',
-                    headers: { 'X-Access-Key': JSONBIN_KEY }
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    return data.record?.playCount || 0;
-                }
-            } catch (e) {
-                console.error('Failed to get play count:', e);
-            }
-            return 0;
-        }
-
-        // Function to update all stats in the UI
-        async function updateStatsDisplay() {
-            try {
-                // Get total visitors (all-time)
-                const totalResponse = await fetch(`https://api.countapi.xyz/get/${UNIQUE_ID}/total_visitors`);
-                const totalData = await totalResponse.json();
-                const totalVisitors = totalData.value || 0;
-
-                // Get currently online (last 60 seconds)
-                const onlineResponse = await fetch(`https://api.countapi.xyz/get/${UNIQUE_ID}/online_visitors`);
-                const onlineData = await onlineResponse.json();
-                const onlineVisitors = onlineData.value || 0;
-
-                // Get audio play count
-                const playCount = await getPlayCount();
-
-                // Update UI
-                liveVisitorCountEl.textContent = onlineVisitors;
-                modalLiveCount.textContent = onlineVisitors;
-                modalTotalCount.textContent = totalVisitors;
-                modalPlayCount.textContent = playCount;
-            } catch (e) {
-                console.error('Failed to update stats:', e);
-            }
-        }
-
-        // Function to track a visitor (call this on page load)
-        async function trackVisitor() {
-            try {
-                // Increment total visitors
-                await fetch(`https://api.countapi.xyz/hit/${UNIQUE_ID}/total_visitors`);
-
-                // Set/update "online" visitor with 60-second TTL
-                await fetch(`https://api.countapi.xyz/update/${UNIQUE_ID}/online_visitors?amount=1&reset=60`);
-
-                // Update display
-                updateStatsDisplay();
-            } catch (e) {
-                console.error('Failed to track visitor:', e);
-            }
-        }
 
         // 🎵 AUDIO PLAYER INTEGRATION
         function togglePlay() {
@@ -933,8 +813,6 @@
                 audio.play().then(() => {
                     playIcon.className = 'fa-solid fa-pause';
                     playBtn.classList.add('playing');
-                    // 🔥 Increment play count when audio starts
-                    incrementPlayCount();
                 }).catch(e => {
                     console.log('Playback failed:', e);
                     playIcon.className = 'fa-solid fa-times';
@@ -1203,20 +1081,7 @@
             }
         });
 
-        // 🚀 INITIALIZE STATS SYSTEM
-        window.addEventListener('load', async () => {
-            // Track this visitor
-            trackVisitor();
-            
-            // Update stats every 10 seconds (for real-time online count)
-            setInterval(updateStatsDisplay, 10000);
-            
-            // Initial update
-            updateStatsDisplay();
-            
-            // Update slider
-            updateSliderThumb();
-        });
+        // 🚀 GoatCounter is already working — no extra initialization needed!
 
         // 📊 STATS MODAL HANDLING
         liveCounterBtn.addEventListener('click', () => {
@@ -1232,6 +1097,11 @@
             if (e.target === statsModal) {
                 statsModal.style.display = 'none';
             }
+        });
+
+        // Initialize slider thumb
+        window.addEventListener('load', () => {
+            updateSliderThumb();
         });
     </script>
 </body>
