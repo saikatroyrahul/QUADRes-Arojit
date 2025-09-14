@@ -351,76 +351,127 @@
             box-shadow: 0 3px 12px rgba(255, 162, 0, 0.3);
         }
 
-        /* Social Media Slider */
+        /* Social Media Slider - ENHANCED */
         .social-container {
             display: flex;
             align-items: center;
             justify-content: center;
             margin-top: 20px;
+            width: 100%;
+        }
+
+        .social-slider-wrapper {
+            position: relative;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .social-slider-track {
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(to right, 
+                #E4405F 0%, 
+                #E4405F 30%, 
+                rgba(204, 194, 220, 0.16) 30%, 
+                rgba(204, 194, 220, 0.16) 70%, 
+                #1877F2 70%, 
+                #1877F2 100%);
+            border-radius: 10px;
+            position: relative;
+            margin: 0 0 15px 0;
         }
 
         .social-slider {
-            width: 140px;
+            width: 100%;
             height: 8px;
-            background: linear-gradient(to right, #E4405F 0%, rgba(204, 194, 220, 0.16) 40%, rgba(204, 194, 220, 0.16) 60%, #1877F2 100%);
             outline: none;
             border-radius: 10px;
             -webkit-appearance: none;
             appearance: none;
             cursor: pointer;
             position: relative;
-            margin: 0 20px;
+            background: transparent;
+            z-index: 2;
         }
 
-        /* Hide default slider thumb - we use walking icon instead */
+        /* Hide default slider thumb - we use custom icon instead */
         .social-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 0;
-            height: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
             background: transparent;
             border: none;
             cursor: pointer;
+            position: relative;
+            z-index: 5;
         }
 
         .social-slider::-moz-range-thumb {
-            width: 0;
-            height: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
             background: transparent;
             border: none;
             cursor: pointer;
-            opacity: 0;
-        }
-
-        /* Walking person icon overlay */
-        .slider-wrapper {
             position: relative;
-            display: inline-block;
+            z-index: 5;
         }
 
-        .walking-icon {
+        /* Custom slider thumb with animation */
+        .slider-thumb {
             position: absolute;
-            top: 6px;
-            left: 0;
-            transform: translateY(-50%);
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffa200, #ff7b00);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            z-index: 4;
             pointer-events: none;
-            z-index: 10;
-            color: #333;
-            font-size: 35px;
-            transition: all 0.3s ease;
-            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+            transition: transform 0.2s ease, background 0.3s ease;
         }
 
-        .walking-icon.flipped {
-            transform: translateY(-50%) scaleX(-1);
+        .slider-thumb:hover {
+            transform: translateX(-50%) scale(1.1);
+        }
+
+        .slider-thumb.instagram-mode {
+            background: linear-gradient(45deg, #f09433, #dc2743);
+        }
+
+        .slider-thumb.facebook-mode {
+            background: linear-gradient(45deg, #1877F2, #0d5cbf);
+        }
+
+        .slider-thumb i {
+            transition: transform 0.3s ease;
+        }
+
+        .slider-thumb.instagram-mode i {
+            transform: rotate(-30deg);
+        }
+
+        .slider-thumb.facebook-mode i {
+            transform: rotate(30deg);
         }
 
         .social-logos {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            width: 180px;
-            margin-left: 26px;
+            width: 100%;
+            padding: 0 5px;
         }
 
         .social-logo {
@@ -435,12 +486,35 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
             cursor: pointer;
             flex-shrink: 0;
+            position: relative;
+        }
+
+        .social-logo:hover {
+            opacity: 1;
+            transform: scale(1.1);
         }
 
         .social-logo.active {
             opacity: 1;
-            transform: scale(1.1);
+            transform: scale(1.15);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        .social-logo::after {
+            content: 'Slide to connect';
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            font-size: 10px;
+            color: #CAC4D0;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .social-logo:hover::after {
+            opacity: 1;
         }
 
         .instagram-logo {
@@ -454,6 +528,15 @@
         .social-logo i {
             color: white;
             font-size: 20px;
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 8px;
+            font-size: 10px;
+            color: #CAC4D0;
         }
 
         /* Visitor Counter */
@@ -537,6 +620,12 @@
             .visitor-number {
                 font-size: 14px;
             }
+            
+            .social-logo::after {
+                content: 'Connect';
+                font-size: 9px;
+                top: -22px;
+            }
         }
 
         /* Small mobile screens */
@@ -591,12 +680,7 @@
             }
             
             .social-logos {
-                width: 160px;
-                margin-left: 22px;
-            }
-
-            .walking-icon {
-                font-size: 14px;
+                width: 100%;
             }
         }
 
@@ -634,10 +718,6 @@
             .social-logos {
                 gap: 14px;
                 margin: 0 auto;
-            }
-
-            .swimming-icon {
-                font-size: 18px;
             }
         }
 
@@ -735,20 +815,29 @@
                 </button>
             </div>
 
-            <!-- SOCIAL MEDIA SLIDER SECTION -->
+            <!-- ENHANCED SOCIAL MEDIA SLIDER SECTION -->
             <div class="social-container">
-                <div style="display: flex; flex-direction: column; align-items: center;">
+                <div class="social-slider-wrapper">
+                    <div class="social-slider-track">
+                        <input type="range" min="0" max="100" value="50" class="social-slider" id="socialSlider">
+                        <div class="slider-thumb" id="sliderThumb">
+                            <i class="fa-solid fa-arrows-left-right"></i>
+                        </div>
+                    </div>
+                    
                     <div class="social-logos">
-                        <div class="social-logo instagram-logo" id="instaLogo" onclick="window.open('https://www.instagram.com/quadres_bd', '_blank')">
+                        <div class="social-logo instagram-logo" id="instaLogo" onclick="openSocialLink('instagram')">
                             <i class="fab fa-instagram"></i>
                         </div>
-                        <div class="slider-wrapper">
-                            <input type="range" min="0" max="100" value="50" class="social-slider" id="socialSlider">
-                            <i class="fa-solid fa-person-swimming walking-icon" id="walkingIcon" style="color: #ffffff;"></i>
-                        </div>
-                        <div class="social-logo facebook-logo" id="fbLogo" onclick="window.open('https://www.facebook.com/quadres.bd', '_blank')">
+                        
+                        <div class="social-logo facebook-logo" id="fbLogo" onclick="openSocialLink('facebook')">
                             <i class="fab fa-facebook-f"></i>
                         </div>
+                    </div>
+                    
+                    <div class="slider-labels">
+                        <span>Swipe to Instagram</span>
+                        <span>Swipe to Facebook</span>
                     </div>
                 </div>
             </div>
@@ -766,35 +855,14 @@
         const instaLogo = document.getElementById('instaLogo');
         const fbLogo = document.getElementById('fbLogo');
         const visitorCountEl = document.getElementById('visitorCount');
-        const walkingIcon = document.getElementById('walkingIcon');
+        const sliderThumb = document.getElementById('sliderThumb');
 
         // Initialize volume (keeping audio functionality)
         audio.volume = 0.7;
 
-        // COMPLETELY FIXED: Swimming icon positioning with separate track
-        function updateWalkingIcon() {
-            const value = parseInt(socialSlider.value);
-            const trackWidth = 140; // Same as slider width
-            
-            // Calculate position as percentage along the track
-            const positionPercent = value; // 0% to 100%
-            
-            // Set position using percentage to avoid pixel calculation issues
-            walkingIcon.style.left = positionPercent + '%';
-            
-            // Update orientation based on direction
-            if (value <= 50) {
-                // Going toward Instagram (left) - normal orientation  
-                walkingIcon.style.transform = 'translateY(-50%) translateX(-50%) scaleX(1)';
-            } else {
-                // Going toward Facebook (right) - flip horizontally
-                walkingIcon.style.transform = 'translateY(-50%) translateX(-50%) scaleX(-1)';
-            }
-        }
-
         // Visitor Counter Function
         function updateVisitorCount() {
-            // Get current visitor count from memory (since we can't use localStorage in Claude.ai)
+            // Get current visitor count from memory
             let visitorCount = window.visitorCount || 0;
             
             // Increment visitor count
@@ -820,7 +888,7 @@
             if (audio.paused) {
                 audio.play().then(() => {
                     playIcon.className = 'fa-solid fa-pause';
-                    playBtn.classList.add('playing'); // Add playing class for orange background
+                    playBtn.classList.add('playing');
                 }).catch(e => {
                     console.log('Playback failed:', e);
                     playIcon.className = 'fa-solid fa-times';
@@ -828,7 +896,7 @@
             } else {
                 audio.pause();
                 playIcon.className = 'fa-solid fa-circle-play';
-                playBtn.classList.remove('playing'); // Remove playing class for transparent background
+                playBtn.classList.remove('playing');
             }
         }
 
@@ -929,61 +997,89 @@
             durationEl.textContent = formatTime(audio.duration);
         });
 
-        // Social Media Slider Control with walking icon - FIXED VERSION
-        let sliderTimeout;
-        let sliderStartValue = 50;
+        // Enhanced Social Media Slider Control
         let sliderDirection = '';
+        let sliderTimeout;
 
-        socialSlider.addEventListener('input', (e) => {
-            const value = parseInt(e.target.value);
+        // Update slider thumb position and style
+        function updateSliderThumb() {
+            const value = parseInt(socialSlider.value);
+            const trackWidth = socialSlider.offsetWidth;
+            const thumbPosition = (value / 100) * trackWidth;
             
-            // Update walking icon position and orientation
-            updateWalkingIcon();
-            
-            // Clear any existing timeout
-            clearTimeout(sliderTimeout);
+            // Update thumb position
+            sliderThumb.style.left = `${thumbPosition}px`;
             
             // Update visual feedback
             if (value < 30) {
                 instaLogo.classList.add('active');
                 fbLogo.classList.remove('active');
+                sliderThumb.classList.add('instagram-mode');
+                sliderThumb.classList.remove('facebook-mode');
                 sliderDirection = 'instagram';
             } else if (value > 70) {
                 fbLogo.classList.add('active');
                 instaLogo.classList.remove('active');
+                sliderThumb.classList.add('facebook-mode');
+                sliderThumb.classList.remove('instagram-mode');
                 sliderDirection = 'facebook';
             } else {
                 instaLogo.classList.remove('active');
                 fbLogo.classList.remove('active');
+                sliderThumb.classList.remove('instagram-mode');
+                sliderThumb.classList.remove('facebook-mode');
                 sliderDirection = '';
             }
+        }
+
+        // Open social media link
+        function openSocialLink(platform) {
+            if (platform === 'instagram') {
+                window.open('https://www.instagram.com/quadres_bd', '_blank');
+            } else if (platform === 'facebook') {
+                window.open('https://www.facebook.com/quadres.bd', '_blank');
+            }
+        }
+
+        // Handle slider input
+        socialSlider.addEventListener('input', (e) => {
+            const value = parseInt(e.target.value);
+            
+            // Update slider thumb
+            updateSliderThumb();
+            
+            // Clear any existing timeout
+            clearTimeout(sliderTimeout);
+            
+            // Set a timeout to navigate if slider is at extreme ends
+            sliderTimeout = setTimeout(() => {
+                if (value < 10) {
+                    openSocialLink('instagram');
+                    // Reset slider after opening
+                    setTimeout(() => {
+                        socialSlider.value = 50;
+                        updateSliderThumb();
+                    }, 500);
+                } else if (value > 90) {
+                    openSocialLink('facebook');
+                    // Reset slider after opening
+                    setTimeout(() => {
+                        socialSlider.value = 50;
+                        updateSliderThumb();
+                    }, 500);
+                }
+            }, 300);
         });
 
         // Handle when user releases the slider
         socialSlider.addEventListener('change', (e) => {
             const value = parseInt(e.target.value);
             
-            if (sliderDirection === 'instagram' && value < 30) {
-                // Open Instagram immediately (not in a timeout)
-                window.open('https://www.instagram.com/quadres_bd', '_blank');
-            } else if (sliderDirection === 'facebook' && value > 70) {
-                // Open Facebook immediately (not in a timeout)
-                window.open('https://www.facebook.com/quadres.bd', '_blank');
-            }
-            
-            // Reset slider to center after a short delay
-            setTimeout(() => {
+            // Reset slider if not at extreme ends
+            if (value >= 10 && value <= 90) {
                 socialSlider.value = 50;
-                updateWalkingIcon(); // Reset walking icon position
-                instaLogo.classList.remove('active');
-                fbLogo.classList.remove('active');
-                sliderDirection = '';
-            }, 300);
-        });
-
-        // Handle touch events for better mobile experience
-        socialSlider.addEventListener('touchstart', () => {
-            sliderStartValue = parseInt(socialSlider.value);
+                updateSliderThumb();
+            }
         });
 
         // Handle audio loading states
@@ -1002,10 +1098,10 @@
             console.log('Audio error:', e);
         });
 
-        // FIXED: Handle when audio ends - reset to paused state
+        // Handle when audio ends
         audio.addEventListener('ended', () => {
             playIcon.className = 'fa-solid fa-circle-play';
-            playBtn.classList.remove('playing'); // Remove orange background when song ends
+            playBtn.classList.remove('playing');
         });
 
         // Initialize particles
@@ -1040,50 +1136,22 @@
         // Handle orientation change
         window.addEventListener('orientationchange', () => {
             setTimeout(() => {
-                const body = document.body;
-                const backgroundImage = body.style.backgroundImage;
-                body.style.backgroundImage = 'none';
-                setTimeout(() => {
-                    body.style.backgroundImage = backgroundImage || "url('background.jpg')";
-                }, 50);
-                
                 document.body.style.height = '100vh';
                 document.body.style.height = '100dvh';
                 
-                // Update walking icon position after orientation change
-                setTimeout(updateWalkingIcon, 100);
+                // Update slider thumb position after orientation change
+                setTimeout(updateSliderThumb, 100);
             }, 100);
         });
 
-        // Preload background image
-        function preloadBackgroundImage() {
-            const img = new Image();
-            img.onload = function() {
-                console.log('Background image loaded successfully');
-                document.body.style.backgroundImage = "url('background.jpg')";
-            };
-            img.onerror = function() {
-                console.log('Background image failed to load, using Material fallback');
-                document.body.style.backgroundColor = '#1C1B1F';
-            };
-            img.src = 'background.jpg';
-        }
-
         // Initialize everything
         window.addEventListener('load', () => {
-            preloadBackgroundImage();
-            updateVisitorCount(); // Count this visit
-            updateWalkingIcon(); // Initialize walking icon position
+            updateVisitorCount();
+            updateSliderThumb(); // Initialize slider thumb position
         });
 
-        // Also update visitor count immediately
-        updateVisitorCount();
-
-        // Initialize walking icon position on page load
-        updateWalkingIcon();
-
-        preloadBackgroundImage();
+        // Initialize slider thumb position on page load
+        updateSliderThumb();
     </script>
 </body>
 </html>
-
