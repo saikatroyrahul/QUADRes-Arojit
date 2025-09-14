@@ -7,7 +7,7 @@
     <!-- Font Awesome for social media icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Mobile-First Design - Reset and Base */
+        /* Your existing CSS styles remain unchanged */
         * {
             margin: 0;
             padding: 0;
@@ -739,14 +739,14 @@
             <div class="social-container">
                 <div style="display: flex; flex-direction: column; align-items: center;">
                     <div class="social-logos">
-                        <div class="social-logo instagram-logo" id="instaLogo">
+                        <div class="social-logo instagram-logo" id="instaLogo" onclick="window.open('https://www.instagram.com/quadres_bd', '_blank')">
                             <i class="fab fa-instagram"></i>
                         </div>
                         <div class="slider-wrapper">
                             <input type="range" min="0" max="100" value="50" class="social-slider" id="socialSlider">
                             <i class="fa-solid fa-person-swimming walking-icon" id="walkingIcon" style="color: #ffffff;"></i>
                         </div>
-                        <div class="social-logo facebook-logo" id="fbLogo">
+                        <div class="social-logo facebook-logo" id="fbLogo" onclick="window.open('https://www.facebook.com/quadres.bd', '_blank')">
                             <i class="fab fa-facebook-f"></i>
                         </div>
                     </div>
@@ -929,9 +929,10 @@
             durationEl.textContent = formatTime(audio.duration);
         });
 
-        // Social Media Slider Control with walking icon
-        let isSliding = false;
-        let slideTimeout;
+        // Social Media Slider Control with walking icon - FIXED VERSION
+        let sliderTimeout;
+        let sliderStartValue = 50;
+        let sliderDirection = '';
 
         socialSlider.addEventListener('input', (e) => {
             const value = parseInt(e.target.value);
@@ -940,47 +941,49 @@
             updateWalkingIcon();
             
             // Clear any existing timeout
-            clearTimeout(slideTimeout);
+            clearTimeout(sliderTimeout);
             
             // Update visual feedback
             if (value < 30) {
                 instaLogo.classList.add('active');
                 fbLogo.classList.remove('active');
+                sliderDirection = 'instagram';
             } else if (value > 70) {
                 fbLogo.classList.add('active');
                 instaLogo.classList.remove('active');
+                sliderDirection = 'facebook';
             } else {
                 instaLogo.classList.remove('active');
                 fbLogo.classList.remove('active');
+                sliderDirection = '';
+            }
+        });
+
+        // Handle when user releases the slider
+        socialSlider.addEventListener('change', (e) => {
+            const value = parseInt(e.target.value);
+            
+            if (sliderDirection === 'instagram' && value < 30) {
+                // Open Instagram immediately (not in a timeout)
+                window.open('https://www.instagram.com/quadres_bd', '_blank');
+            } else if (sliderDirection === 'facebook' && value > 70) {
+                // Open Facebook immediately (not in a timeout)
+                window.open('https://www.facebook.com/quadres.bd', '_blank');
             }
             
-            // Set a timeout to navigate and reset
-            slideTimeout = setTimeout(() => {
-                if (value < 30) {
-                    // Slide left - Go to Instagram
-                    window.open('https://www.instagram.com/quadres_bd', '_blank');
-                } else if (value > 70) {
-                    // Slide right - Go to Facebook
-                    window.open('https://www.facebook.com/quadres.bd', '_blank');
-                }
-                
-                // Reset slider to center after a short delay
-                setTimeout(() => {
-                    socialSlider.value = 50;
-                    updateWalkingIcon(); // Reset walking icon position
-                    instaLogo.classList.remove('active');
-                    fbLogo.classList.remove('active');
-                }, 500);
+            // Reset slider to center after a short delay
+            setTimeout(() => {
+                socialSlider.value = 50;
+                updateWalkingIcon(); // Reset walking icon position
+                instaLogo.classList.remove('active');
+                fbLogo.classList.remove('active');
+                sliderDirection = '';
             }, 300);
         });
 
         // Handle touch events for better mobile experience
         socialSlider.addEventListener('touchstart', () => {
-            isSliding = true;
-        });
-
-        socialSlider.addEventListener('touchend', () => {
-            isSliding = false;
+            sliderStartValue = parseInt(socialSlider.value);
         });
 
         // Handle audio loading states
