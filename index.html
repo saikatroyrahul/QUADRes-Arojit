@@ -1,19 +1,4 @@
-
-                        <!DOCTYPE html>
-                        <html lang="en">
-                        <head>
-                            <meta charset="UTF-8">
-                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <style>
-                body {
-                  background-color: white; /* Ensure the iframe has a white background */
-                }
-    
-                
-              </style>
-                        </head>
-                        <body>
-                            <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -23,7 +8,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Preload main logo -->
     <link rel="preload" as="image" href="QUADRes main logo with original colour.jpg" crossorigin="anonymous">
+    <!-- ✅ PUSHER JS SDK -->
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <style>
+        /* ... All your existing CSS ... */
         * {
             margin: 0;
             padding: 0;
@@ -527,8 +515,8 @@
             color: #CAC4D0;
         }
 
-        /* 👁️ REAL-TIME VISITOR COUNTER */
-        .live-counter {
+        /* 👥 LIVE VIEWER COUNTER */
+        .live-viewer-counter {
             position: absolute;
             top: 20px;
             right: 20px;
@@ -543,26 +531,21 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            cursor: pointer;
         }
 
-        .live-counter:hover {
-            transform: scale(1.05);
-        }
-
-        .live-icon {
+        .live-viewer-icon {
             color: #FFA200;
             font-size: 16px;
         }
 
-        .live-number {
+        .live-viewer-number {
             font-size: 16px;
             color: #D0BCFF;
             font-weight: bold;
             font-family: 'Roboto Mono', monospace;
         }
 
-        /* 📊 STATS MODAL */
+        /* 📊 STATS MODAL (Optional - shows GoatCounter link) */
         .stats-modal {
             display: none;
             position: fixed;
@@ -661,43 +644,34 @@
         }
 
         @media (max-width: 400px) {
-            .live-counter {
+            .live-viewer-counter {
                 top: 16px;
                 right: 16px;
                 padding: 6px 12px;
             }
-            .live-text { font-size: 10px; }
-            .live-number { font-size: 14px; }
+            .live-viewer-number { font-size: 14px; }
         }
     </style>
 </head>
 <body>
-    <!-- 👁️ REAL-TIME VISITOR COUNTER BUTTON -->
-    <div class="live-counter" id="liveCounterBtn">
-        <i class="fas fa-eye live-icon"></i>
-        <div class="live-number">📊</div>
+    <!-- 👥 LIVE VIEWER COUNTER -->
+    <div class="live-viewer-counter">
+        <i class="fas fa-users live-viewer-icon"></i>
+        <div class="live-viewer-number" id="liveViewerCount">0</div>
     </div>
 
-    <!-- 📊 STATS MODAL -->
+    <!-- 📊 STATS MODAL (Optional) -->
     <div class="stats-modal" id="statsModal">
         <div class="stats-content">
             <div class="stats-header">
-                <div class="stats-title">📊 Visitor Stats</div>
+                <div class="stats-title">📊 Full Stats</div>
                 <button class="close-btn" id="closeStatsModal">&times;</button>
             </div>
             <div class="stat-item">
-                <div class="stat-label">Real-time Stats</div>
-                <div class="stat-value">Available at</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-label">Your Dashboard</div>
+                <div class="stat-label">Detailed Analytics</div>
                 <a href="https://mhy.goatcounter.com" target="_blank" style="color: #D0BCFF; text-decoration: underline; font-size: 18px;">
-                    mhy.goatcounter.com
+                    View Dashboard
                 </a>
-            </div>
-            <div class="stat-item">
-                <div class="stat-label">Audio Plays</div>
-                <div class="stat-value">Not Tracked</div>
             </div>
         </div>
     </div>
@@ -783,7 +757,7 @@
         </div>
     </div>
 
-    <!-- ✅ GOATCOUNTER - GUARANTEED WORKING -->
+    <!-- ✅ GOATCOUNTER - FOR YOUR PRIVATE ANALYTICS -->
     <script data-goatcounter="https://mhy.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
     <script>
@@ -798,14 +772,32 @@
         const instaLogo = document.getElementById('instaLogo');
         const fbLogo = document.getElementById('fbLogo');
         const sliderThumb = document.getElementById('sliderThumb');
-        
-        // 👁️ Stats Elements
-        const liveCounterBtn = document.getElementById('liveCounterBtn');
+        const liveViewerCountEl = document.getElementById('liveViewerCount');
         const statsModal = document.getElementById('statsModal');
         const closeStatsModal = document.getElementById('closeStatsModal');
 
         // Initialize volume
         audio.volume = 0.7;
+
+        // ✅ PUSHER - REAL-TIME LIVE VIEWERS (WITH YOUR CREDENTIALS)
+        const pusher = new Pusher('a0f04ad32cae44ed783e', {
+            cluster: 'ap2'
+        });
+
+        const channel = pusher.subscribe('presence-live-viewers');
+
+        // Update live viewer count when membership changes
+        channel.bind('pusher:subscription_succeeded', function(members) {
+            liveViewerCountEl.textContent = members.count;
+        });
+
+        channel.bind('pusher:member_added', function(member) {
+            liveViewerCountEl.textContent = parseInt(liveViewerCountEl.textContent) + 1;
+        });
+
+        channel.bind('pusher:member_removed', function(member) {
+            liveViewerCountEl.textContent = parseInt(liveViewerCountEl.textContent) - 1;
+        });
 
         // 🎵 AUDIO PLAYER INTEGRATION
         function togglePlay() {
@@ -1081,10 +1073,8 @@
             }
         });
 
-        // 🚀 GoatCounter is already working — no extra initialization needed!
-
         // 📊 STATS MODAL HANDLING
-        liveCounterBtn.addEventListener('click', () => {
+        liveViewerCountEl.addEventListener('click', () => {
             statsModal.style.display = 'flex';
         });
 
@@ -1092,7 +1082,6 @@
             statsModal.style.display = 'none';
         });
 
-        // Close modal if clicked outside content
         statsModal.addEventListener('click', (e) => {
             if (e.target === statsModal) {
                 statsModal.style.display = 'none';
@@ -1106,12 +1095,3 @@
     </script>
 </body>
 </html>
-
-
-    
-              <script>
-                              
-              </script>
-                        </body>
-                        </html>
-                    
