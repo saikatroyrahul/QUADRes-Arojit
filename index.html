@@ -8,8 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Preload main logo -->
     <link rel="preload" as="image" href="QUADRes main logo with original colour.jpg" crossorigin="anonymous">
-    <!-- ✅ PUSHER JS SDK -->
-    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <style>
         /* ... All your existing CSS ... */
         * {
@@ -515,7 +513,7 @@
             color: #CAC4D0;
         }
 
-        /* 👥 LIVE VIEWER COUNTER */
+        /* 👥 SIMULATED LIVE VIEWER COUNTER */
         .live-viewer-counter {
             position: absolute;
             top: 20px;
@@ -654,7 +652,7 @@
     </style>
 </head>
 <body>
-    <!-- 👥 LIVE VIEWER COUNTER -->
+    <!-- 👥 SIMULATED LIVE VIEWER COUNTER -->
     <div class="live-viewer-counter">
         <i class="fas fa-users live-viewer-icon"></i>
         <div class="live-viewer-number" id="liveViewerCount">0</div>
@@ -779,31 +777,59 @@
         // Initialize volume
         audio.volume = 0.7;
 
-        // ✅ PUSHER - REAL-TIME LIVE VIEWERS (WITH AUTHENTICATION)
-        const pusher = new Pusher('a0f04ad32cae44ed783e', {
-            cluster: 'ap2',
-            authEndpoint: 'https://pusher-platform.herokuapp.com/auth', // ✅ Free public auth endpoint
-            auth: {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+        // ✅ COUNTAPI v2 - FOR "LIVE" VIEWER COUNT
+        const COUNTAPI_KEY = 'ut_PfZznL64pZtBiDC8rla8RdZNCEZNLctA4WuLhTyf';
+        const NAMESPACE = 'quadres_music_player';
+        const ENDPOINT = `https://api.countapi.xyz/v2/${NAMESPACE}/page_views`;
+
+        // Initialize counter
+        async function initializeCounter() {
+            try {
+                await fetch(ENDPOINT, {
+                    method: 'CREATE',
+                    headers: {
+                        'Authorization': `Bearer ${COUNTAPI_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ value: 0 })
+                });
+            } catch (e) {
+                console.log('Counter already exists');
             }
-        });
+        }
 
-        const channel = pusher.subscribe('presence-live-viewers');
+        // Increment and get count
+        async function updateViewerCount() {
+            try {
+                const response = await fetch(ENDPOINT, {
+                    method: 'UPDATE',
+                    headers: {
+                        'Authorization': `Bearer ${COUNTAPI_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ amount: 1 })
+                });
+                const data = await response.json();
+                liveViewerCountEl.textContent = data.value;
+            } catch (e) {
+                console.error('Failed to update count:', e);
+            }
+        }
 
-        // Update live viewer count when membership changes
-        channel.bind('pusher:subscription_succeeded', function(members) {
-            liveViewerCountEl.textContent = members.count;
-        });
-
-        channel.bind('pusher:member_added', function(member) {
-            liveViewerCountEl.textContent = parseInt(liveViewerCountEl.textContent) + 1;
-        });
-
-        channel.bind('pusher:member_removed', function(member) {
-            liveViewerCountEl.textContent = parseInt(liveViewerCountEl.textContent) - 1;
-        });
+        // Just get current count (for other viewers)
+        async function getCurrentCount() {
+            try {
+                const response = await fetch(ENDPOINT, {
+                    headers: {
+                        'Authorization': `Bearer ${COUNTAPI_KEY}`
+                    }
+                });
+                const data = await response.json();
+                liveViewerCountEl.textContent = data.value;
+            } catch (e) {
+                console.error('Failed to get count:', e);
+            }
+        }
 
         // 🎵 AUDIO PLAYER INTEGRATION
         function togglePlay() {
@@ -1095,7 +1121,13 @@
         });
 
         // Initialize slider thumb
-        window.addEventListener('load', () => {
+        window.addEventListener('load', async () => {
+            await initializeCounter();
+            await updateViewerCount(); // Increment for this viewer
+            
+            // Update every 5 seconds (feels "live")
+            setInterval(getCurrentCount, 5000);
+            
             updateSliderThumb();
         });
     </script>
