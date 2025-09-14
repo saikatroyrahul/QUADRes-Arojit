@@ -860,16 +860,16 @@
         // Initialize volume (keeping audio functionality)
         audio.volume = 0.7;
 
-        // Visitor Counter Function
+        // Visitor Counter Function - FIXED with localStorage
         function updateVisitorCount() {
-            // Get current visitor count from memory
-            let visitorCount = window.visitorCount || 0;
+            // Get current visitor count from localStorage
+            let visitorCount = parseInt(localStorage.getItem('visitorCount')) || 0;
             
             // Increment visitor count
             visitorCount++;
             
-            // Store in memory for this session
-            window.visitorCount = visitorCount;
+            // Store in localStorage for persistence
+            localStorage.setItem('visitorCount', visitorCount);
             
             // Update display with animation
             visitorCountEl.textContent = visitorCount;
@@ -1146,12 +1146,19 @@
 
         // Initialize everything
         window.addEventListener('load', () => {
-            updateVisitorCount();
-            updateSliderThumb(); // Initialize slider thumb position
+            // Set initial visitor count from localStorage
+            const initialCount = parseInt(localStorage.getItem('visitorCount')) || 0;
+            visitorCountEl.textContent = initialCount;
+            
+            // Update slider thumb position
+            updateSliderThumb();
         });
 
         // Initialize slider thumb position on page load
         updateSliderThumb();
+        
+        // Update visitor count after page loads
+        setTimeout(updateVisitorCount, 100);
     </script>
 </body>
 </html>
