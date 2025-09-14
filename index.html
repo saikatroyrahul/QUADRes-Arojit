@@ -394,6 +394,13 @@
             position: relative;
             background: transparent;
             z-index: 2;
+            /* 👇 ADDED: Prevent selection and tap highlight */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
         }
 
         /* Hide default slider thumb - we use custom icon instead */
@@ -408,6 +415,7 @@
             cursor: pointer;
             position: relative;
             z-index: 5;
+            outline: none; /* 👈 Prevent focus outline */
         }
 
         .social-slider::-moz-range-thumb {
@@ -419,6 +427,7 @@
             cursor: pointer;
             position: relative;
             z-index: 5;
+            outline: none; /* 👈 Prevent focus outline */
         }
 
         /* Custom slider thumb with animation */
