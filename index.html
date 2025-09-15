@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>My Brand - Mobile Music Player</title>
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Preload main logo -->
     <link rel="preload" as="image" href="QUADRes main logo with original colour.jpg" crossorigin="anonymous">
     <style>
         /* ... All your existing CSS ... */
@@ -720,7 +718,7 @@
 
             <!-- AUDIO ELEMENT -->
             <audio id="audioPlayer" preload="auto">
-                <source src="rom rom bhaiyo(MP3_160K) (3).mp3" type="audio/mp3">
+                <source src="rom rom bhaiyo(MP3_160K) (3).mp3" type="audio/mpeg">
                 Your browser does not support audio playback.
             </audio>
 
@@ -891,13 +889,7 @@
         // Create ripple effect
         function createRipple(element, x) {
             const ripple = document.createElement('div');
-            ripple.style.cssText = `
-                position: absolute;
-                border-radius: 50%;
-                background: rgba(208, 188, 255, 0.3);
-                animation: ripple 0.6s linear;
-                pointer-events: none;
-                left: ${x - 10}px;
+            ripple.style.cssText = `                left: ${x - 10}px;
                 top: 50%;
                 transform: translateY(-50%);
                 width: 20px;
@@ -954,13 +946,13 @@
             
             sliderThumb.style.left = `${thumbPosition}px`;
             
-            if (value < 30) {
+            if (value < 20) {
                 instaLogo.classList.add('active');
                 fbLogo.classList.remove('active');
                 sliderThumb.classList.add('instagram-mode');
                 sliderThumb.classList.remove('facebook-mode');
                 sliderDirection = 'instagram';
-            } else if (value > 70) {
+            } else if (value > 80) {
                 fbLogo.classList.add('active');
                 instaLogo.classList.remove('active');
                 sliderThumb.classList.add('facebook-mode');
@@ -990,13 +982,13 @@
             clearTimeout(sliderTimeout);
             
             sliderTimeout = setTimeout(() => {
-                if (value < 10) {
+                if (value < 20) {
                     openSocialLink('instagram');
                     setTimeout(() => {
                         socialSlider.value = 50;
                         updateSliderThumb();
                     }, 500);
-                } else if (value > 90) {
+                } else if (value > 80) {
                     openSocialLink('facebook');
                     setTimeout(() => {
                         socialSlider.value = 50;
@@ -1008,7 +1000,7 @@
 
         socialSlider.addEventListener('change', (e) => {
             const value = parseInt(e.target.value);
-            if (value >= 10 && value <= 90) {
+            if (value >= 20 && value <= 80) {
                 socialSlider.value = 50;
                 updateSliderThumb();
             }
@@ -1027,6 +1019,7 @@
 
         audio.addEventListener('error', (e) => {
             playIcon.className = 'fa-solid fa-times';
+            alert('Audio file not found or unsupported format.');
             console.log('Audio error:', e);
         });
 
